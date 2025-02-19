@@ -1,0 +1,87 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+/* main container */
+.container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    height: 100%;
+    min-height: 700px;
+}
+/* end main container */
+
+/* top layout */
+.container .top {
+    width: 100%;
+    height: 50px;
+    background-color: green;
+}
+.container .top .top-nav-bar{
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+.container .top .top-nav-bar .logout{
+    padding-top: 17px;
+    margin-left: 75%;
+}
+/* end top layout */
+
+/* left sidebar  */
+.container .left{
+    width: 20%;
+    height: fit-content;
+    background-color: green; 
+}
+.container .left .main-nav-bar{
+   margin: 0px;
+}
+.container .left .main-nav-bar ul {
+   font-size:25px; 
+}
+.container .left .main-nav-bar ul li{
+    list-style-type: none;
+}
+.container .left .main-nav-bar ul li a{
+    text-decoration: none;
+    font-size: 25px;
+    
+}
+.container .left .main-nav-bar ul li a:hover{
+    color: #d11616;
+    cursor: pointer;
+}
+.container .left .top-nav-bar h1{
+    padding-top: 20px;
+    text-align: center;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: 200;
+    font-size: 48px;
+    font-style: italic;
+}
+/* end Left sidebar */
+
+/* buttom of the layout */
+.container .buttom{
+    width:100%;
+    height: 70px;
+    background-color: Green;
+    margin-bottom:0px;
+}
+
+.container .footer .continer .row{
+    display:flex;
+    text-align:center;
+}
+.container .footer .continer .row h2{
+    text-align:center;
+    padding: 30px 50px 30px 270px;
+    font-size:20px;
+}
+.container .footer .continer .row h2:hover{
+    cursor: pointer;
+}
+/* end of the layout */
