@@ -1,7 +1,7 @@
 <?php
 session_start();
-include('admin/config.php');
-include_once('test.php');
+include('../admin/config.php');
+include_once('../test.php');
 ?>
 
 <!doctype html>
@@ -12,7 +12,7 @@ include_once('test.php');
   <title>
     <?php echo $title."-Galaicha Nepal";?>
   </title>
-  <link rel="stylesheet" href="css/style.css?v=100">
+  <link rel="stylesheet" href="../css/style.css?v=100">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
@@ -106,7 +106,7 @@ include_once('test.php');
           </div>
         </form>
         <?php
-         include ("signin-signup.php");
+         include ("../signin-signup.php");
 
          ?>
         <!--  -->
@@ -126,7 +126,7 @@ include_once('test.php');
     <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
       <div class="carousel-indicators">
         <?php
-        include ("admin/config.php");
+        include ("../admin/config.php");
         $feature_sql = "SELECT * FROM features LIMIT 3";
         $feature_result = mysqli_query($conn, $feature_sql);
         if (mysqli_num_rows($feature_result) > 0) {
@@ -147,7 +147,7 @@ include_once('test.php');
           while ($row = mysqli_fetch_assoc($feature_result)) {
             $activeClass = $slideIndex == 0 ? 'active' : '';
             echo '<div class="carousel-item ' . $activeClass . '">
-                    <img src="admin/feature_image/' . $row['feature_image'] . '" class="d-block w-100" alt="...">
+                    <img src="../admin/feature_image/' . $row['feature_image'] . '" class="d-block w-100" alt="...">
                   </div>';
             $slideIndex++;
           }
@@ -183,7 +183,7 @@ include_once('test.php');
     ?>
       <div class="col-md-4" id="card">
         <div class="card" style="width: 22rem;">
-          <img src="admin/images/<?php echo $row['image']; ?>" class="card-img-top" alt="...">
+          <img src="../admin/images/<?php echo $row['image']; ?>" class="card-img-top" alt="...">
           <div class="card-body">
             <h5 class="card-title">
               <?php echo $row['title'];?>
@@ -285,7 +285,7 @@ include_once('test.php');
       </div>
     </div>
   </div>
-  <script src="JS/payment.js?v=31"></script>
+  <script src="payment.js?v=31"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
     crossorigin="anonymous"></script>

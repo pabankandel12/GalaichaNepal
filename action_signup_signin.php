@@ -13,6 +13,8 @@ if(isset($_POST['submit1'])){
   $password = $_POST['password'];
   $cpassword = $_POST['cpassword'];
 
+   $encriptionPassword = password_hash($password,PASSWORD_DEFAULT);
+
   $file_name=$_FILES['profileImage']['name'];
   $file_tmp=$_FILES['profileImage']['tmp_name'];
   $file_size=$_FILES['profileImage']['size'];
@@ -34,7 +36,7 @@ if(isset($_POST['submit1'])){
       die('Invalid phone number.');
   }
   if($password === $cpassword){
-    $sql = "INSERT INTO User(name,username,email,phone,password,pro_image,address) Values('$Fullname','$username','$email','$number','$password', '$file_name','$address')";
+    $sql = "INSERT INTO User(name,username,email,phone,password,pro_image,address) Values('$Fullname','$username','$email','$number',' $encriptionPassword', '$file_name','$address')";
     if(mysqli_query($conn,$sql)){
         header("Location: index.php");
     } else {
@@ -59,7 +61,7 @@ if(isset($_POST['submit'])){
 
       if(mysqli_num_rows($result) > 0){
           while($row = mysqli_fetch_assoc($result)){
-              if($row['email'] == $username && $row['password'] == $password){
+              if($row['email'] == $username && password_verify($password, $row['password'])){
                   $_SESSION['Normal_username'] = $username;
                   echo "<script>alert('You are Login!'); window.location='index.php';</script>";
                   exit; // stop the script from continuing

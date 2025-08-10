@@ -105,10 +105,12 @@ if (isset($_SESSION['Normal_username']) && $_SESSION['Normal_username'] == true)
                        }
                        $outputTable .= "</table>";
                        $outputTable .= "<div class='text-center'><b>Total: ".$total."</b></div>";
+                       $outputTable .= '<button class="btn btn-primary text-center" style="width: 100%; font-size: 20px; font-style:bold;"><a href="payment.php">Proceed to Pay </a></button>';
                        echo $outputTable;
                       }
+                      
                  ?>
-                 <button class="btn btn-primary text-center"><a href="payment.php">pay</a></button>
+                 <!-- <button class="btn btn-primary text-center"><a href="payment.php">pay</a></button> -->
               </div>
             </div>
           </div>

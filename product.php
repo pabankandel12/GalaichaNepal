@@ -98,7 +98,7 @@ include_once('test.php');
            <input type="hidden" id="price<?php echo $row['id'];?>" value="<?php echo $row['price'];?>">
            <?php 
              // Check if the user is logged in
-             if (isset($_SESSION['username']) && $_SESSION['username'] == true) {
+             if (isset($_SESSION['Normal_username']) && $_SESSION['Normal_username'] == true) {
              echo '<button class="btn btn-success add" data-id="' . $row['id'] . '" id="add-to-cart-btn">Add to Cart</button>';
            } else {
            echo '<button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#exampleModal">

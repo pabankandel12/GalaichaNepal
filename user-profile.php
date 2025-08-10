@@ -2,7 +2,7 @@
 session_start();
 
 // Check if the user is logged in
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['Normal_username'])) {
     header("Location: login.php");
     exit();
 }
@@ -11,7 +11,7 @@ if (!isset($_SESSION['username'])) {
 include 'admin/config.php';
 
 // Fetch user details from the database
-$username = $_SESSION['username'];
+$username = $_SESSION['Normal_username'];
 $sql = "SELECT * FROM user WHERE email = '$username'";
 $result = mysqli_query($conn,$sql);
 if(mysqli_num_rows($result)>0){
@@ -56,7 +56,10 @@ if(mysqli_num_rows($result1)>0){
     <div class="container">
         <h1 class="my-4">User Profile</h1>
         <div class="profile-header">
-            <img src="user-image/<?php echo htmlspecialchars($user['pro_image']);?>" alt="Profile Photo" class="profile-photo">
+           <?php
+            $profileImage = !empty($user['pro_image']) ? $user['pro_image'] : 'user-icon.png';
+            ?>
+            <img src="user-image/<?php echo htmlspecialchars($profileImage);?>" alt="Profile Photo" class="profile-photo">
             <div>
                 <h2><?php echo htmlspecialchars($user['name']); ?></h2>
                 <p>Email: <?php echo htmlspecialchars($user['email']); ?></p>

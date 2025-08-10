@@ -65,7 +65,6 @@ if(!empty($_SESSION['cart'])){
     }
     $outputTable .= "</table>";
     $outputTable .= "<div class='text-center'><b>Total:".$total."</b></div>";
-    $outputTable .= '<button class="btn btn-primary text-center" style="width: 100%; font-size: 20px; font-style:bold;"><a href="payment.php">Proceed to Pay</a></button>';
     $_SESSION['cart_table'] = $outputTable;
 }
 

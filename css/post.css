@@ -56,3 +56,7 @@ form .news-price input{
     height: 35px;
     outline: none;
 }
+
+form .news-title .necessarayIcon{
+    color: red;
+}

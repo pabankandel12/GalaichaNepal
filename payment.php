@@ -1,3 +1,8 @@
+<?php
+session_start();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -101,79 +106,77 @@
                 <input type="submit" value="Submit" name="submit">
             </div>
         </form>
+<?php
 
-         <input type="radio" id="showForm2" name="showForm" value="form2"> 
-        <!-- <label for="showForm2"> E-sewa </label>
-        <form id="form2" class="hidden" action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST">
-            <div class="form-data">
-                <label for="Ammount">Amount </label>
-                <input type="text" id="amount" name="amount" value="100" required>
-            </div>
-            <input type="text" id="tax_amount" name="tax_amount" value="10" class="hidden" required>
-            <div class="form-data">
-                <label for="TotalAmmount"> Pay Amount</label>
-                <input type="text" id="total_amount" name="total_amount" value="110" required>
-            </div>
-            <input type="text" id="transaction_uuid" name="transaction_uuid" class="hidden" required>
-            <input type="text" id="product_code" name="product_code" value="EPAYTEST" required>
-            <input type="text" id="product_service_charge" name="product_service_charge" value="0" class="hidden"
-                required>
-            <div class="form-data">
-                <label for="deliverycharge">Delivery Charge</label>
-                <input type="text" id="product_delivery_charge" name="product_delivery_charge" value="0" required>
-            </div>
-            <input type="text" id="success_url" name="success_url" value="https://esewa.com.np" class="hidden" required>
-            <input type="text" id="failure_url" name="failure_url" value="https://google.com" class="hidden" required>
-            <input type="text" id="signed_field_names" name="signed_field_names"
-                value="total_amount,transaction_uuid,product_code" class="hidden" required>
-            <input type="text" id="signature" name="signature" class="hidden" required>
-            <input value="Submit" type="submit">
-        </form> -->
-        <?php
+// reciving the data on adding a cart
+if(!empty($_SESSION['cart'])){
+    $outputTable = '';
+    $total = 0;
+    $outputTable .= "<table hidden='hidden' class='table table-bordered'><thead><tr><td>Name</td><td>Price</td><td>Quantity</td><td>Action</td> </tr></thead>";
+    foreach($_SESSION['cart'] as $key => $value){
+        $outputTable .= "<tr><td>".$value['p_name']."</td><td>".($value['p_price'] * 1) ."</td><td>".'1'."</td><td><button id=".$value['p_id']." class='btn btn-danger delete'>Delete</button></td></tr>";  
+        $total = $total + ($value['p_price'] * 1);
+    }
+    $outputTable .= "</table>";
+    
+    echo $outputTable;
+}
 
+// end of fetching user data
+$total = $total + ($value['p_price']);
+$pname = $value['p_name'];
 
-// Generate a unique transaction ID
-$transaction_uuid = uniqid(); 
+// eSewa Secret Key
+$secret = "8gBm/:&EnhH.1/q";
 
-// eSewa credentials (Replace with your actual credentials)
-$merchant_secret_key = "8gBm/:&EnhH.1/q"; // Your actual eSewa secret key
+// Payment Data (Ensure Correct Total)
+$amount = $total;  // Main amount
+$tax_amount = "10";  // Tax amount
+$total_amount = $amount + $tax_amount;  // Correct total amount
+$transaction_uuid = uniqid();
+$product_code = "EPAYTEST";
 
-// Define transaction details
-$total_amount = 110;
-$product_code = "EPAYTEST23s";
-$signed_fields = "total_amount,transaction_uuid,product_code";
+// Data Array
+$data = [
+    "total_amount" => $total_amount,
+    "transaction_uuid" => $transaction_uuid,
+    "product_code" => $product_code
+];
 
-// ✅ Correct way to generate signature
-$signature_string = "$total_amount|$transaction_uuid|$product_code";
-$signature = hash_hmac('sha256', $signature_string, $merchant_secret_key, true);
-$signature = base64_encode($signature); // eSewa requires Base64 encoding
+// Generate Message String in "key=value,key=value" Format
+$message = "";
+foreach ($data as $key => $value) {
+    $message .= "$key=$value,";
+}
+$message = rtrim($message, ","); // Remove trailing comma
+
+// Generate HMAC-SHA256 Signature and Encode in Base64
+$signature = base64_encode(hash_hmac('sha256', $message, $secret, true));
 
 ?>
 
-<label for="showForm2">E-sewa</label>
-<form id="form2" action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST">
-    <div class="form-data">
-        <label for="Amount">Amount</label>
-        <input type="text" id="amount" name="amount" value="100" required>
-    </div>
-    <input type="text" id="tax_amount" name="tax_amount" value="10" class="hidden" required>
-    <div class="form-data">
-        <label for="TotalAmount">Pay Amount</label>
-        <input type="text" id="total_amount" name="total_amount" value="<?php echo $total_amount; ?>" required>
-    </div>
-    <input type="text" id="transaction_uuid" name="transaction_uuid" value="<?php echo $transaction_uuid; ?>" class="hidden" required>
-    <input type="text" id="product_code" name="product_code" value="<?php echo $product_code; ?>" required>
-    <input type="text" id="product_service_charge" name="product_service_charge" value="0" class="hidden" required>
-    <div class="form-data">
-        <label for="deliverycharge">Delivery Charge</label>
-        <input type="text" id="product_delivery_charge" name="product_delivery_charge" value="0" required>
-    </div>
-    <input type="text" id="success_url" name="success_url" value="https://yourwebsite.com/success.php" class="hidden" required>
-    <input type="text" id="failure_url" name="failure_url" value="https://yourwebsite.com/failure.php" class="hidden" required>
-    <input type="text" id="signed_field_names" name="signed_field_names" value="<?php echo $signed_fields; ?>" class="hidden" required>
-    <input type="text" id="signature" name="signature" value="<?php echo $signature; ?>" class="hidden" required>
-    <input value="Pay with eSewa" type="submit">
-</form>
+
+         <input type="radio" id="showForm2" name="showForm" value="form2"> 
+         <label for="showForm2"> E-sewa </label>
+         <form action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST">
+        <input type="hidden" id="amount" name="amount" value="<?php echo $amount; ?>" required>
+        <input type="hidden" id="tax_amount" name="tax_amount" value="<?php echo $tax_amount; ?>" required>
+        <input type="hidden" id="total_amount" name="total_amount" value="<?php echo $total_amount; ?>" required>
+        <input type="hidden" id="transaction_uuid" name="transaction_uuid" value="<?php echo $transaction_uuid; ?>" required>
+        <input type="hidden" id="product_code" name="product_code" value="<?php echo $product_code; ?>" required>
+        <input type="hidden" id="product_service_charge" name="product_service_charge" value="0" required>
+        <input type="hidden" id="product_delivery_charge" name="product_delivery_charge" value="0" required>
+        <input type="hidden" id="success_url" name="success_url" value="http://localhost/FinalProject-ERROR%20MANAGE/payment_action.php" required>
+        <input type="hidden" id="failure_url" name="failure_url" value="http://localhost/FinalProject-ERROR%20MANAGE/" required>
+        
+        <!-- Corrected Signed Field Names -->
+        <input type="hidden" id="signed_field_names" name="signed_field_names" value="total_amount,transaction_uuid,product_code" required>
+        
+        <!-- Corrected Dynamic Signature -->
+        <input type="hidden" id="signature" name="signature" value="<?php echo $signature; ?>" required>
+        
+        <input value="Submit" type="submit">
+    </form>
 
     </div>
 

@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(!isset($_SESSION['username'])){
+if (!isset($_SESSION['username'])) {
     header("location:signin.php");
 }
 
@@ -17,7 +17,7 @@ if(!isset($_SESSION['username'])){
     <!-- Favicon -->
     <link href="admin/img/favicon.ico" rel="icon">
     <link rel="stylesheet" href="../css/home.css?v= 57">
-    <link rel="stylesheet" href="../css/post.css?v= 23">
+    <link rel="stylesheet" href="../css/post.css?v= 25">
 </head>
 <style>
     /* Basic form styles */
@@ -110,49 +110,54 @@ if(!isset($_SESSION['username'])){
                         <input type="file" name="image">
                         <input type="submit" name="submit_featureImage" value="Submit">
                     </form>
+                    <!--  product add part -->
                     <form action="action_post.php" method="post" enctype="multipart/form-data">
                         <div class="news-title">
-                            <label for="newstitle">Product Title:</label>
-                            <input type="text" name="product_title">
+                            <label for="newstitle">Product Title <span class="necessarayIcon">*</span>:</label>
+                            <input type="text" id="product_title" name="product_title" required>
+                            <span class="add_product_form_error"></span>
                         </div>
                         <div class="news-contain">
-                            <label for="newscontain">Product Details:</label>
-                            <textarea name="product_contain" id="" cols="10" rows="20"></textarea>
+                            <label for="newscontain">Product Details <span class="necessarayIcon">*</span>:</label>
+                            <textarea name="product_contain" id="product_details" cols="10" rows="20" required></textarea>
+                            <span class="add_product_form_error"></span>
                         </div>
                         <div class="news-image">
-                            <label for="newsimage">Product image:</label>
-                            <input type="file" name="product_image">
+                            <label for="newsimage">Product image <span class="necessarayIcon">*</span>:</label>
+                            <input type="file" id="product_images" name="product_image" required>
+                            <span class="add_product_form_error"></span>
                         </div>
                         <div class="news-price">
-                            <label for="newsimage">Product Price:</label>
-                            <input type="text" name="product_price">
+                            <label for="newsimage">Product Price <span class="necessarayIcon">*</span>:</label>
+                            <input type="text" id="product_price" name="product_price" required>
+                            <span class="add_product_form_error"></span>
                         </div>
                         <div class="product-catrgories">
                             <label>Category:</label>
-                            <select name="Product_category">
+                            <select name="Product_category" required>
+                                <option value="" selected disabled>-- Select Category --</option>
                                 <?php
-                       include "config.php";
-            $sql = "SELECT * FROM p_category";
-            $result = $conn->query($sql);
+                                include "config.php";
+                                $sql = "SELECT * FROM p_category";
+                                $result = $conn->query($sql);
 
-            // Output options for categories
-            if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                    echo "<option value='" . $row["c_id"] . "'>" . $row["c_name"] . "</option>";
-                }
-            } else {
-                echo "No categories found";
-            }
-
-         
-            ?>
+                                // Output options for categories
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo "<option value='" . $row["c_id"] . "'>" . $row["c_name"] . "</option>";
+                                    }
+                                } else {
+                                    echo "No categories found";
+                                }
+                                ?>
                             </select>
                         </div>
-                        <div class="news-categories">
+                        <div class="news-categories" required>
                             <label for="newscategories">Select Color:</label>
                             <select name="product_color" id="">
+                                <option value="" selected disabled>-- Select Color --</option>
                                 <option value="BLack">Black</option>
-                                <option value="Bulue">Bulue</option>
+                                <option value="Bulue">Blue</option>
                                 <option value="Red">Red</option>
                                 <option value="Light">Light</option>
                                 <option value="Dark">Dark</option>
@@ -167,15 +172,78 @@ if(!isset($_SESSION['username'])){
         </div>
     </div>
     <script>
-    document.getElementById('show-add-FeatureImage-form-btn').addEventListener('click', function() {
-        var addCategoryForm = document.getElementById('add-FeatureImage-form');
-        if (addCategoryForm.style.display === 'none') {
-            addCategoryForm.style.display = 'block';
-        } else {
-            addCategoryForm.style.display = 'none';
-        }
-    });
-</script>
+        document.getElementById('show-add-FeatureImage-form-btn').addEventListener('click', function() {
+            var addCategoryForm = document.getElementById('add-FeatureImage-form');
+            if (addCategoryForm.style.display === 'none') {
+                addCategoryForm.style.display = 'block';
+            } else {
+                addCategoryForm.style.display = 'none';
+            }
+        });
+
+        //form validation here
+        document.querySelector('form[action="action_post.php"]').addEventListener('submit', function(e) {
+            // Prevent default form submission
+            e.preventDefault();
+
+            // Clear all previous error messages
+            const errorSpans = document.querySelectorAll(".add_product_form_error");
+            errorSpans.forEach(span => {
+                span.textContent = "";
+            });
+
+            // Form fields
+            let title = document.querySelector("#product_title");
+            let contain = document.querySelector('textarea[name="product_contain"]');
+            let image = document.querySelector('input[name="product_image"]');
+            let price = document.querySelector('input[name="product_price"]');
+            let category = document.querySelector('select[name="Product_category"]');
+            let color = document.querySelector('select[name="product_color"]');
+
+            let isValid = true;
+
+            // Validate title
+            if (title.value.trim().length < 3) {
+                title.nextElementSibling.textContent = "Title must be at least 3 characters.";
+                isValid = false;
+            }
+
+            // Validate product details
+            if (contain.value.trim().length < 10) {
+                contain.nextElementSibling.textContent = "Product details must be at least 10 characters.";
+                isValid = false;
+            }
+
+            // Validate product image
+            if (!image.files[0]) {
+                image.nextElementSibling.textContent = "Please upload a product image.";
+                isValid = false;
+            }
+
+            // Validate product price
+            if (price.value.trim() === "" || isNaN(price.value.trim())) {
+                price.nextElementSibling.textContent = "Please enter a valid number.";
+                isValid = false;
+            }
+
+            // Validate category selection
+            if (!category.value) {
+                category.parentElement.querySelector(".add_product_form_error")?.textContent = "Please select a category.";
+                isValid = false;
+            }
+
+            // Validate color selection
+            if (!color.value) {
+                color.parentElement.querySelector(".add_product_form_error")?.textContent = "Please select a color.";
+                isValid = false;
+            }
+
+            // Submit form if all validations pass
+            if (isValid) {
+                this.submit();
+            }
+        });
+    </script>
 </body>
 
 </html>
